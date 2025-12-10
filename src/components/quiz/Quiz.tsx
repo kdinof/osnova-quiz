@@ -1,11 +1,10 @@
 import { useState, useCallback } from "react";
-import { questions, motivationalScreens, trackResults, Answer } from "@/data/quizData";
+import { questions, trackResults, Answer } from "@/data/quizData";
 import { QuestionScreen } from "./QuestionScreen";
-import { MotivationalScreen } from "./MotivationalScreen";
 import { LoadingScreen } from "./LoadingScreen";
 import { ResultScreen } from "./ResultScreen";
 
-type QuizState = "question" | "motivational" | "loading" | "result";
+type QuizState = "question" | "loading" | "result";
 
 interface QuizAnswers {
   [questionId: number]: Answer;
@@ -52,21 +51,9 @@ export function Quiz() {
       productivity: prev.productivity + answer.scores.productivity,
     }));
 
-    if (motivationalScreens[currentQuestion.id]) {
-      setState("motivational");
-    } else if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedAnswer(null);
-    } else {
-      setState("loading");
-    }
-  };
-
-  const handleMotivationalContinue = () => {
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
-      setState("question");
     } else {
       setState("loading");
     }
@@ -88,17 +75,6 @@ export function Quiz() {
         selectedAnswer={selectedAnswer}
         onSelect={handleSelectAnswer}
         onNext={handleNext}
-      />
-    );
-  }
-
-  if (state === "motivational") {
-    const screen = motivationalScreens[currentQuestion.id];
-    return (
-      <MotivationalScreen
-        key={`motivational-${currentQuestion.id}`}
-        screen={screen}
-        onContinue={handleMotivationalContinue}
       />
     );
   }
