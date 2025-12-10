@@ -76,7 +76,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
 
   return (
     <div className="min-h-screen bg-muted/30 flex items-center justify-center px-4">
-      <div className="w-full max-w-[760px] mx-auto text-center">
+      <div className="w-full max-w-[600px] mx-auto text-center">
         {/* Circular Progress */}
         <div className="relative inline-flex items-center justify-center mb-8">
           <svg className="w-44 h-44 -rotate-90" viewBox="0 0 160 160">
