@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Check } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 
 interface LoadingScreenProps {
   scores: { visual: number; builder: number; productivity: number };
 }
 
-const loadingPhases = [
-  { text: "Анализируем ваши ответы...", targetProgress: 30, duration: 1000 },
-  { text: "Подбираем оптимальный путь обучения...", targetProgress: 70, duration: 1500 },
-  { text: "Формируем персональную программу...", targetProgress: 95, duration: 1000 },
-  { text: "✨ Направление подобрано!", targetProgress: 100, duration: 500 },
+const loadingSteps = [
+  "Анализируем ваш уровень навыков",
+  "Анализируем ваши предпочтения",
+  "Анализируем ваше место на IT-рынке",
+  "Подбираем лучшие материалы",
+  "Создаём персональный план обучения",
 ];
 
 const resultUrls: Record<string, string> = {
@@ -21,7 +22,7 @@ const resultUrls: Record<string, string> = {
 
 export function LoadingScreen({ scores }: LoadingScreenProps) {
   const [progress, setProgress] = useState(0);
-  const [phaseIndex, setPhaseIndex] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
   const calculateResult = () => {
@@ -32,89 +33,129 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
   };
 
   useEffect(() => {
-    let currentPhase = 0;
-    let startProgress = 0;
-
-    const runPhase = () => {
-      if (currentPhase >= loadingPhases.length) {
-        setIsComplete(true);
-        return;
-      }
-
-      const phase = loadingPhases[currentPhase];
-      const progressIncrement = phase.targetProgress - startProgress;
-      const steps = 20;
-      const stepDuration = phase.duration / steps;
-      let step = 0;
-
-      const interval = setInterval(() => {
-        step++;
-        const easeOut = 1 - Math.pow(1 - step / steps, 3);
-        setProgress(startProgress + progressIncrement * easeOut);
-
-        if (step >= steps) {
+    const stepDuration = 800;
+    const progressPerStep = 100 / loadingSteps.length;
+    
+    const interval = setInterval(() => {
+      setCurrentStep(prev => {
+        const next = prev + 1;
+        if (next >= loadingSteps.length) {
           clearInterval(interval);
-          startProgress = phase.targetProgress;
-          currentPhase++;
-          setPhaseIndex(currentPhase);
-          
-          if (currentPhase < loadingPhases.length) {
-            setTimeout(runPhase, 200);
-          } else {
-            setIsComplete(true);
-          }
+          setTimeout(() => setIsComplete(true), 400);
+          return prev;
         }
-      }, stepDuration);
-    };
+        return next;
+      });
+    }, stepDuration);
 
-    const timeout = setTimeout(runPhase, 300);
-    return () => clearTimeout(timeout);
-  }, []);
+    // Animate progress smoothly
+    const progressInterval = setInterval(() => {
+      setProgress(prev => {
+        const targetProgress = (currentStep + 1) * progressPerStep;
+        if (prev >= 100) {
+          clearInterval(progressInterval);
+          return 100;
+        }
+        return Math.min(prev + 1, targetProgress);
+      });
+    }, 30);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(progressInterval);
+    };
+  }, [currentStep]);
 
   const handleResultClick = () => {
     const result = calculateResult();
     window.location.href = resultUrls[result];
   };
 
-  const currentPhase = loadingPhases[Math.min(phaseIndex, loadingPhases.length - 1)];
+  // Calculate stroke dash for circular progress
+  const radius = 70;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-muted/30 flex items-center justify-center px-4">
       <div className="w-full max-w-[760px] mx-auto text-center">
-        {/* Icon */}
-        <div className="mb-8">
-          <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full bg-osnova-lime/10 ${isComplete ? '' : 'animate-pulse'}`}>
-            {isComplete ? (
-              <div className="w-12 h-12 rounded-full bg-osnova-lime flex items-center justify-center animate-scale-in">
-                <Check className="w-6 h-6 text-osnova-dark" />
-              </div>
-            ) : (
-              <Sparkles className="w-10 h-10 text-osnova-lime animate-pulse" />
-            )}
-          </div>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-6">
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gradient-to-r from-osnova-lime to-osnova-lime-hover rounded-full transition-all duration-100 ease-out"
-              style={{ width: `${progress}%` }}
+        {/* Circular Progress */}
+        <div className="relative inline-flex items-center justify-center mb-8">
+          <svg className="w-44 h-44 -rotate-90" viewBox="0 0 160 160">
+            {/* Background circle */}
+            <circle
+              cx="80"
+              cy="80"
+              r={radius}
+              fill="none"
+              stroke="hsl(var(--muted))"
+              strokeWidth="8"
             />
-          </div>
-          <p className="text-sm text-muted-foreground mt-2">{Math.round(progress)}%</p>
+            {/* Progress circle */}
+            <circle
+              cx="80"
+              cy="80"
+              r={radius}
+              fill="none"
+              stroke="hsl(var(--osnova-lime))"
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              className="transition-all duration-300 ease-out"
+            />
+          </svg>
+          <span className="absolute text-4xl font-bold text-foreground">
+            {Math.round(progress)}%
+          </span>
         </div>
 
-        {/* Loading Text */}
-        <div className="mb-8 min-h-[80px]">
-          <p className={`text-2xl font-medium text-foreground ${!isComplete ? 'animate-pulse' : ''}`}>
-            {currentPhase.text}
-          </p>
-          {isComplete && (
-            <p className="text-lg text-muted-foreground mt-2 animate-fade-in">
-              Мы подготовили для вас персональный план обучения
-            </p>
-          )}
+        {/* Title */}
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+          Мы создаём ваш персональный план!
+        </h1>
+
+        {/* Steps Card */}
+        <div className="bg-background rounded-2xl p-6 shadow-sm border border-border/50 text-left mb-8">
+          <div className="space-y-4">
+            {loadingSteps.map((step, index) => {
+              const isCompleted = index < currentStep;
+              const isActive = index === currentStep && !isComplete;
+              const isPending = index > currentStep;
+
+              return (
+                <div
+                  key={index}
+                  className={`flex items-center gap-3 transition-all duration-300 ${
+                    isPending ? "opacity-50" : "opacity-100"
+                  }`}
+                >
+                  <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                    {isCompleted || isComplete ? (
+                      <div className="w-6 h-6 rounded-full bg-osnova-lime flex items-center justify-center animate-scale-in">
+                        <Check className="w-4 h-4 text-osnova-dark" />
+                      </div>
+                    ) : isActive ? (
+                      <Loader2 className="w-5 h-5 text-osnova-lime animate-spin" />
+                    ) : (
+                      <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                    )}
+                  </div>
+                  <span
+                    className={`text-base transition-colors duration-300 ${
+                      isCompleted || isComplete
+                        ? "text-foreground font-medium"
+                        : isActive
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    }`}
+                  >
+                    {step}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* CTA Button */}
