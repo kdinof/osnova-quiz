@@ -55,6 +55,29 @@ export function Quiz() {
     }, 300);
   };
 
+  const handleBack = () => {
+    if (currentQuestionIndex > 0) {
+      const prevQuestion = questions[currentQuestionIndex - 1];
+      const prevAnswer = answers[prevQuestion.id];
+      
+      if (prevAnswer) {
+        setScores(prev => ({
+          visual: prev.visual - prevAnswer.scores.visual,
+          builder: prev.builder - prevAnswer.scores.builder,
+          productivity: prev.productivity - prevAnswer.scores.productivity,
+        }));
+        setAnswers(prev => {
+          const newAnswers = { ...prev };
+          delete newAnswers[prevQuestion.id];
+          return newAnswers;
+        });
+      }
+      
+      setCurrentQuestionIndex(prev => prev - 1);
+      setSelectedAnswer(null);
+    }
+  };
+
   const handlePostQuizAnswer = (answerId: string) => {
     console.log("Post-quiz answer:", answerId);
     console.log("All answers:", answers);
@@ -70,6 +93,7 @@ export function Quiz() {
           totalSteps={totalQuestions}
           selectedAnswer={selectedAnswer}
           onSelect={handleSelectAnswer}
+          onBack={handleBack}
         />
     );
   }

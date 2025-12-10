@@ -8,6 +8,7 @@ interface QuestionScreenProps {
   totalSteps: number;
   selectedAnswer: string | null;
   onSelect: (answer: Answer) => void;
+  onBack?: () => void;
 }
 
 export function QuestionScreen({
@@ -16,11 +17,17 @@ export function QuestionScreen({
   totalSteps,
   selectedAnswer,
   onSelect,
+  onBack,
 }: QuestionScreenProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background max-w-[760px] mx-auto">
       <div className="px-4 pt-6 pb-4">
-        <ProgressBar current={currentStep} total={totalSteps} />
+        <ProgressBar 
+          current={currentStep} 
+          total={totalSteps} 
+          onBack={onBack}
+          showBack={currentStep > 1}
+        />
       </div>
 
       <div className="flex-1 px-4 pb-6 flex flex-col">
