@@ -3,19 +3,15 @@ import { questions, trackResults, Answer } from "@/data/quizData";
 import { QuestionScreen } from "./QuestionScreen";
 import { LoadingScreen } from "./LoadingScreen";
 import { ResultScreen } from "./ResultScreen";
+import { useQuizStorage } from "@/hooks/useQuizStorage";
 
 type QuizState = "question" | "loading" | "result";
 
-interface QuizAnswers {
-  [questionId: number]: Answer;
-}
-
 export function Quiz() {
-  const [state, setState] = useState<QuizState>("question");
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<QuizAnswers>({});
+  const { session, updateSession, resetSession } = useQuizStorage();
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [scores, setScores] = useState({ visual: 0, builder: 0, productivity: 0 });
+
+  const { currentQuestionIndex, answers, scores, state } = session;
 
   const currentQuestion = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
@@ -37,20 +33,27 @@ export function Quiz() {
   const handleSelectAnswer = (answer: Answer) => {
     setSelectedAnswer(answer.id);
     
-    setAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
-    
-    setScores(prev => ({
-      visual: prev.visual + answer.scores.visual,
-      builder: prev.builder + answer.scores.builder,
-      productivity: prev.productivity + answer.scores.productivity,
-    }));
+    const newAnswers = { ...answers, [currentQuestion.id]: answer };
+    const newScores = {
+      visual: scores.visual + answer.scores.visual,
+      builder: scores.builder + answer.scores.builder,
+      productivity: scores.productivity + answer.scores.productivity,
+    };
 
     setTimeout(() => {
       if (currentQuestionIndex < totalQuestions - 1) {
-        setCurrentQuestionIndex(prev => prev + 1);
+        updateSession({
+          answers: newAnswers,
+          scores: newScores,
+          currentQuestionIndex: currentQuestionIndex + 1,
+        });
         setSelectedAnswer(null);
       } else {
-        setState("loading");
+        updateSession({
+          answers: newAnswers,
+          scores: newScores,
+          state: "loading",
+        });
       }
     }, 300);
   };
@@ -61,19 +64,21 @@ export function Quiz() {
       const prevAnswer = answers[prevQuestion.id];
       
       if (prevAnswer) {
-        setScores(prev => ({
-          visual: prev.visual - prevAnswer.scores.visual,
-          builder: prev.builder - prevAnswer.scores.builder,
-          productivity: prev.productivity - prevAnswer.scores.productivity,
-        }));
-        setAnswers(prev => {
-          const newAnswers = { ...prev };
-          delete newAnswers[prevQuestion.id];
-          return newAnswers;
+        const newAnswers = { ...answers };
+        delete newAnswers[prevQuestion.id];
+        
+        updateSession({
+          currentQuestionIndex: currentQuestionIndex - 1,
+          answers: newAnswers,
+          scores: {
+            visual: scores.visual - prevAnswer.scores.visual,
+            builder: scores.builder - prevAnswer.scores.builder,
+            productivity: scores.productivity - prevAnswer.scores.productivity,
+          },
         });
+      } else {
+        updateSession({ currentQuestionIndex: currentQuestionIndex - 1 });
       }
-      
-      setCurrentQuestionIndex(prev => prev - 1);
       setSelectedAnswer(null);
     }
   };
@@ -82,6 +87,7 @@ export function Quiz() {
     console.log("Post-quiz answer:", answerId);
     console.log("All answers:", answers);
     console.log("Final scores:", scores);
+    resetSession();
   };
 
   if (state === "question") {
