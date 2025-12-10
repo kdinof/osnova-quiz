@@ -9,7 +9,6 @@ type QuizState = "question" | "loading" | "result";
 
 export function Quiz() {
   const { session, updateSession, resetSession } = useQuizStorage();
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   const { currentQuestionIndex, answers, scores, state } = session;
 
@@ -25,6 +24,12 @@ export function Quiz() {
     }
   }, [currentQuestionIndex, currentQuestion.id, answers]);
   const totalQuestions = questions.length;
+
+  // Sync selectedAnswer when question changes (e.g., on back navigation or page refresh)
+  useEffect(() => {
+    const stored = answers[currentQuestion?.id];
+    setSelectedAnswer(stored?.id || null);
+  }, [currentQuestionIndex, answers, currentQuestion?.id]);
 
   const calculateResult = useCallback(() => {
     const finalScores = { ...scores };
