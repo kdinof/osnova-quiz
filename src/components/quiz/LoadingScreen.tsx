@@ -130,45 +130,53 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
         </div>
 
         {/* Steps Card */}
-        <div className="bg-background rounded-2xl p-6 shadow-sm border border-border/50 text-left mb-8">
-          <div className="space-y-4">
-            {loadingSteps.map((step, index) => {
-              const isCompleted = index < currentStep;
-              const isActive = index === currentStep && !isComplete;
-              const isPending = index > currentStep;
+        <div className="relative mb-8">
+          {/* Animated glow */}
+          <div 
+            className={`absolute -inset-1 bg-gradient-to-r from-osnova-lime/20 via-osnova-lime/40 to-osnova-lime/20 rounded-3xl blur-xl transition-opacity duration-500 ${
+              !isComplete ? "opacity-100 animate-pulse" : "opacity-0"
+            }`}
+          />
+          <div className="relative bg-background rounded-2xl p-6 shadow-sm border border-border/50 text-left">
+            <div className="space-y-4">
+              {loadingSteps.map((step, index) => {
+                const isCompleted = index < currentStep;
+                const isActive = index === currentStep && !isComplete;
+                const isPending = index > currentStep;
 
-              return (
-                <div
-                  key={index}
-                  className={`flex items-center gap-3 transition-all duration-300 ${
-                    isPending ? "opacity-50" : "opacity-100"
-                  }`}
-                >
-                  <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
-                    {isCompleted || isComplete ? (
-                      <div className="w-6 h-6 rounded-full bg-osnova-lime flex items-center justify-center animate-scale-in">
-                        <Check className="w-4 h-4 text-osnova-dark" />
-                      </div>
-                    ) : isActive ? (
-                      <Loader2 className="w-5 h-5 text-osnova-lime animate-spin" />
-                    ) : (
-                      <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
-                    )}
-                  </div>
-                  <span
-                    className={`text-base transition-colors duration-300 ${
-                      isCompleted || isComplete
-                        ? "text-foreground font-medium"
-                        : isActive
-                        ? "text-foreground"
-                        : "text-muted-foreground"
+                return (
+                  <div
+                    key={index}
+                    className={`flex items-center gap-3 transition-all duration-300 ${
+                      isPending ? "opacity-50" : "opacity-100"
                     }`}
                   >
-                    {step}
-                  </span>
-                </div>
-              );
-            })}
+                    <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
+                      {isCompleted || isComplete ? (
+                        <div className="w-6 h-6 rounded-full bg-osnova-lime flex items-center justify-center animate-scale-in">
+                          <Check className="w-4 h-4 text-osnova-dark" />
+                        </div>
+                      ) : isActive ? (
+                        <Loader2 className="w-5 h-5 text-osnova-lime animate-spin" />
+                      ) : (
+                        <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
+                      )}
+                    </div>
+                    <span
+                      className={`text-base transition-colors duration-300 ${
+                        isCompleted || isComplete
+                          ? "text-foreground font-medium"
+                          : isActive
+                          ? "text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {step}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
