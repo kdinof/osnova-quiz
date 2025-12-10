@@ -50,15 +50,31 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         osnova: {
-          lime: "#BFFF00",
-          "lime-hover": "#A8E600",
-          dark: "#0A1F1C",
-          "dark-green": "#1A3D35",
+          lime: "#CCFF00",
+          "lime-hover": "#B8E600",
+          dark: "#0A0A0A",
+          "dark-green": "#1A1A1A",
           white: "#FFFFFF",
           "gray-50": "#F9FAFB",
           "gray-100": "#F3F4F6",
           "gray-500": "#6B7280",
           "gray-900": "#111827",
+        },
+        app: {
+          bg: "#0A0A0A",
+          "card-bg": "#1A1A1A",
+          "card-hover": "#242424",
+        },
+        lime: {
+          DEFAULT: "#CCFF00",
+          50: "#F5FFE6",
+          100: "#EBFFCC",
+          200: "#D6FF99",
+          300: "#CCFF00",
+          400: "#B8E600",
+          500: "#A3CC00",
+          600: "#8FB300",
+          700: "#6B8500",
         },
         track: {
           visual: "hsl(var(--track-visual))",
@@ -84,6 +100,11 @@ export default {
       boxShadow: {
         card: "var(--shadow-card)",
         "card-hover": "var(--shadow-card-hover)",
+        "lime-glow": "0 0 20px rgba(204, 255, 0, 0.15)",
+      },
+      backgroundImage: {
+        "chart-gradient": "linear-gradient(to right, #CCFF00, #6B8500)",
+        "lime-glow": "radial-gradient(circle, rgba(204,255,0,0.15) 0%, transparent 70%)",
       },
       keyframes: {
         "accordion-down": {
