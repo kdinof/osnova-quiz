@@ -111,7 +111,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
             {currentPhase.text}
           </p>
           {isComplete && (
-            <p className="text-muted-foreground mt-2 animate-fade-in">
+            <p className="text-lg text-muted-foreground mt-2 animate-fade-in">
               Мы подготовили для вас персональный план обучения
             </p>
           )}
