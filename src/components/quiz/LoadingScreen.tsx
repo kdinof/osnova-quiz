@@ -107,7 +107,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
 
         {/* Loading Text */}
         <div className="mb-8 min-h-[80px]">
-          <p className={`text-xl font-medium text-foreground ${!isComplete ? 'animate-pulse' : ''}`}>
+          <p className={`text-2xl font-medium text-foreground ${!isComplete ? 'animate-pulse' : ''}`}>
             {currentPhase.text}
           </p>
           {isComplete && (
