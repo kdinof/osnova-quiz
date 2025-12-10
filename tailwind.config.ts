@@ -7,9 +7,11 @@ export default {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1rem",
       screens: {
-        "2xl": "1400px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
       },
     },
     extend: {
@@ -47,38 +49,45 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
+        osnova: {
+          lime: "hsl(var(--osnova-lime))",
+          "lime-hover": "hsl(var(--osnova-lime-hover))",
+          dark: "hsl(var(--osnova-dark))",
+          "dark-green": "hsl(var(--osnova-dark-green))",
+        },
+        track: {
+          visual: "hsl(var(--track-visual))",
+          builder: "hsl(var(--track-builder))",
+          productivity: "hsl(var(--track-productivity))",
         },
       },
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 8px)",
+        "2xl": "1.5rem",
+        "3xl": "2rem",
+      },
+      fontSize: {
+        hero: ["3.5rem", { lineHeight: "1.1", fontWeight: "700" }],
+        h1: ["2rem", { lineHeight: "1.2", fontWeight: "700" }],
+        h2: ["1.5rem", { lineHeight: "1.3", fontWeight: "600" }],
+        h3: ["1.125rem", { lineHeight: "1.4", fontWeight: "600" }],
+        body: ["1rem", { lineHeight: "1.6", fontWeight: "400" }],
+        small: ["0.875rem", { lineHeight: "1.5", fontWeight: "400" }],
+      },
+      boxShadow: {
+        card: "var(--shadow-card)",
+        "card-hover": "var(--shadow-card-hover)",
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
         },
       },
       animation: {
