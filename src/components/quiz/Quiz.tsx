@@ -3,9 +3,8 @@ import { questions, motivationalScreens, trackResults, Answer } from "@/data/qui
 import { QuestionScreen } from "./QuestionScreen";
 import { MotivationalScreen } from "./MotivationalScreen";
 import { ResultScreen } from "./ResultScreen";
-import { LoadingScreen } from "./LoadingScreen";
 
-type QuizState = "question" | "motivational" | "loading" | "result";
+type QuizState = "question" | "motivational" | "result";
 
 interface QuizAnswers {
   [questionId: number]: Answer;
@@ -58,7 +57,7 @@ export function Quiz() {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
     } else {
-      setState("loading");
+      setState("result");
     }
   };
 
@@ -68,7 +67,7 @@ export function Quiz() {
       setSelectedAnswer(null);
       setState("question");
     } else {
-      setState("loading");
+      setState("result");
     }
   };
 
@@ -101,10 +100,6 @@ export function Quiz() {
         onContinue={handleMotivationalContinue}
       />
     );
-  }
-
-  if (state === "loading") {
-    return <LoadingScreen scores={scores} />;
   }
 
   if (state === "result") {
