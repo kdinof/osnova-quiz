@@ -13,12 +13,12 @@ export function QuestionCard({ answer, isSelected, onSelect, index }: QuestionCa
     <button
       onClick={onSelect}
       className={cn(
-        "quiz-card w-full text-left flex items-start gap-4 opacity-0 animate-fade-up",
+        "quiz-card w-full text-left flex items-center gap-4 opacity-0 animate-fade-up",
         isSelected && "quiz-card-selected",
         `stagger-${index + 1}`
       )}
     >
-      <span className="text-2xl flex-shrink-0 mt-0.5">{answer.emoji}</span>
+      <span className="text-2xl flex-shrink-0">{answer.emoji}</span>
       <span className="text-body font-medium text-foreground">{answer.text}</span>
       <div className={cn(
         "ml-auto flex-shrink-0 w-5 h-5 rounded-full border-2 transition-all duration-200",
