@@ -109,15 +109,24 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
         </div>
 
         {/* Title */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+        <div className="mb-8 min-h-[100px]">
+          <h1 
+            className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ease-out ${
+              isComplete ? "animate-fade-in" : ""
+            }`}
+          >
             {isComplete ? "✨ Направление подобрано!" : "Мы создаём ваш персональный план!"}
           </h1>
-          {isComplete && (
-            <p className="text-lg text-muted-foreground mt-2 animate-fade-in">
-              Мы подготовили для вас персональный план обучения
-            </p>
-          )}
+          <p 
+            className={`text-lg text-muted-foreground mt-3 transition-all duration-500 ease-out ${
+              isComplete 
+                ? "opacity-100 translate-y-0" 
+                : "opacity-0 translate-y-4"
+            }`}
+            style={{ transitionDelay: isComplete ? "200ms" : "0ms" }}
+          >
+            Мы подготовили для вас персональный план обучения
+          </p>
         </div>
 
         {/* Steps Card */}
@@ -164,17 +173,22 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
         </div>
 
         {/* CTA Button */}
-        {isComplete && (
-          <div className="animate-fade-in">
-            <Button
-              onClick={handleResultClick}
-              size="lg"
-              className="bg-osnova-lime text-osnova-dark font-semibold px-8 py-6 text-lg rounded-full hover:bg-osnova-lime-hover transition-all duration-200 hover:scale-105"
-            >
-              Посмотреть результат
-            </Button>
-          </div>
-        )}
+        <div 
+          className={`transition-all duration-500 ease-out ${
+            isComplete 
+              ? "opacity-100 translate-y-0" 
+              : "opacity-0 translate-y-6 pointer-events-none"
+          }`}
+          style={{ transitionDelay: isComplete ? "400ms" : "0ms" }}
+        >
+          <Button
+            onClick={handleResultClick}
+            size="lg"
+            className="bg-osnova-lime text-osnova-dark font-semibold px-8 py-6 text-lg rounded-full hover:bg-osnova-lime-hover transition-all duration-200 hover:scale-105"
+          >
+            Посмотреть результат
+          </Button>
+        </div>
       </div>
     </div>
   );
