@@ -7,7 +7,7 @@ interface MotivationalScreenProps {
 
 export function MotivationalScreen({ screen, onContinue }: MotivationalScreenProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-background px-4 py-8">
+    <div className="min-h-screen flex flex-col bg-background px-4 py-8 max-w-[760px] mx-auto">
       <div className="flex-1 flex flex-col justify-center max-w-md mx-auto w-full">
         {/* Decorative element */}
         <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6 animate-fade-up">
