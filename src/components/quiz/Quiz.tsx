@@ -9,6 +9,7 @@ type QuizState = "question" | "loading" | "result";
 
 export function Quiz() {
   const { session, updateSession, resetSession } = useQuizStorage();
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   const { currentQuestionIndex, answers, scores, state } = session;
 
