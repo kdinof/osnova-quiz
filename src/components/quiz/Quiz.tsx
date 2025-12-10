@@ -13,12 +13,16 @@ export function Quiz() {
   const { currentQuestionIndex, answers, scores, state } = session;
 
   const currentQuestion = questions[currentQuestionIndex];
-  
-  // Get previously selected answer for current question from storage
-  const storedAnswer = answers[currentQuestion?.id];
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(
-    storedAnswer?.id || null
-  );
+
+  // Restore selected answer from localStorage when question changes or on mount
+  useEffect(() => {
+    const savedAnswer = answers[currentQuestion.id];
+    if (savedAnswer) {
+      setSelectedAnswer(savedAnswer.id);
+    } else {
+      setSelectedAnswer(null);
+    }
+  }, [currentQuestionIndex, currentQuestion.id, answers]);
   const totalQuestions = questions.length;
 
   // Sync selectedAnswer when question changes (e.g., on back navigation or page refresh)
@@ -43,25 +47,28 @@ export function Quiz() {
 
   const handleSelectAnswer = (answer: Answer) => {
     setSelectedAnswer(answer.id);
-    
-    // Check if there was a previous answer for this question (re-answering)
+
+    // Check if there's already an answer for this question
     const previousAnswer = answers[currentQuestion.id];
-    
-    let newScores = { ...scores };
-    
-    // If re-answering, subtract the old scores first
-    if (previousAnswer) {
-      newScores.visual -= previousAnswer.scores.visual;
-      newScores.builder -= previousAnswer.scores.builder;
-      newScores.productivity -= previousAnswer.scores.productivity;
-    }
-    
-    // Add new answer scores
-    newScores.visual += answer.scores.visual;
-    newScores.builder += answer.scores.builder;
-    newScores.productivity += answer.scores.productivity;
-    
+
     const newAnswers = { ...answers, [currentQuestion.id]: answer };
+
+    // If changing an existing answer, subtract old scores first
+    let newScores = { ...scores };
+    if (previousAnswer) {
+      newScores = {
+        visual: newScores.visual - previousAnswer.scores.visual,
+        builder: newScores.builder - previousAnswer.scores.builder,
+        productivity: newScores.productivity - previousAnswer.scores.productivity,
+      };
+    }
+
+    // Add new answer scores
+    newScores = {
+      visual: newScores.visual + answer.scores.visual,
+      builder: newScores.builder + answer.scores.builder,
+      productivity: newScores.productivity + answer.scores.productivity,
+    };
 
     setTimeout(() => {
       if (currentQuestionIndex < totalQuestions - 1) {
@@ -83,8 +90,11 @@ export function Quiz() {
 
   const handleBack = () => {
     if (currentQuestionIndex > 0) {
-      // Just go back - keep answers and scores intact
-      updateSession({ currentQuestionIndex: currentQuestionIndex - 1 });
+      // Just navigate back, keep all answers and scores intact
+      updateSession({
+        currentQuestionIndex: currentQuestionIndex - 1,
+      });
+      // selectedAnswer will be restored by useEffect
     }
   };
 
