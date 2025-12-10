@@ -109,9 +109,16 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
-          Мы создаём ваш персональный план!
-        </h1>
+        <div className="mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+            {isComplete ? "✨ Направление подобрано!" : "Мы создаём ваш персональный план!"}
+          </h1>
+          {isComplete && (
+            <p className="text-lg text-muted-foreground mt-2 animate-fade-in">
+              Мы подготовили для вас персональный план обучения
+            </p>
+          )}
+        </div>
 
         {/* Steps Card */}
         <div className="bg-background rounded-2xl p-6 shadow-sm border border-border/50 text-left mb-8">
