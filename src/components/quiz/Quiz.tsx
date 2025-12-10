@@ -2,9 +2,10 @@ import { useState, useCallback } from "react";
 import { questions, motivationalScreens, trackResults, Answer } from "@/data/quizData";
 import { QuestionScreen } from "./QuestionScreen";
 import { MotivationalScreen } from "./MotivationalScreen";
+import { LoadingScreen } from "./LoadingScreen";
 import { ResultScreen } from "./ResultScreen";
 
-type QuizState = "question" | "motivational" | "result";
+type QuizState = "question" | "motivational" | "loading" | "result";
 
 interface QuizAnswers {
   [questionId: number]: Answer;
@@ -57,7 +58,7 @@ export function Quiz() {
       setCurrentQuestionIndex(prev => prev + 1);
       setSelectedAnswer(null);
     } else {
-      setState("result");
+      setState("loading");
     }
   };
 
@@ -67,7 +68,7 @@ export function Quiz() {
       setSelectedAnswer(null);
       setState("question");
     } else {
-      setState("result");
+      setState("loading");
     }
   };
 
@@ -100,6 +101,10 @@ export function Quiz() {
         onContinue={handleMotivationalContinue}
       />
     );
+  }
+
+  if (state === "loading") {
+    return <LoadingScreen scores={scores} />;
   }
 
   if (state === "result") {
