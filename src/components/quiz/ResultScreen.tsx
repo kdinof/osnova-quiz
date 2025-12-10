@@ -38,7 +38,7 @@ export function ResultScreen({ result, scores, onPostQuizAnswer }: ResultScreenP
 
   if (showPostQuiz) {
     return (
-      <div className="min-h-screen flex flex-col bg-background px-4 py-8">
+      <div className="min-h-screen flex flex-col bg-background px-4 py-8 max-w-[760px] mx-auto">
         <div className="flex-1 flex flex-col max-w-md mx-auto w-full">
           <h2 className="text-h2 text-foreground mb-6 animate-fade-up">
             {postQuizQuestion.text}
@@ -81,7 +81,7 @@ export function ResultScreen({ result, scores, onPostQuizAnswer }: ResultScreenP
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background px-4 py-8">
+    <div className="min-h-screen flex flex-col bg-background px-4 py-8 max-w-[760px] mx-auto">
       <div className="flex-1 flex flex-col max-w-md mx-auto w-full">
         {/* Result Card */}
         <div className={cn(

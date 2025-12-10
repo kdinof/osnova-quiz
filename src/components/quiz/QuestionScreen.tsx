@@ -20,7 +20,7 @@ export function QuestionScreen({
   onNext,
 }: QuestionScreenProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background max-w-[760px] mx-auto">
       <div className="px-4 pt-6 pb-4">
         <ProgressBar current={currentStep} total={totalSteps} />
       </div>

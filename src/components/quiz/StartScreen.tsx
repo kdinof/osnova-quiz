@@ -4,7 +4,7 @@ interface StartScreenProps {
 
 export function StartScreen({ onStart }: StartScreenProps) {
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen flex flex-col bg-background max-w-[760px] mx-auto">
       {/* Header */}
       <div className="px-4 pt-6 pb-4">
         <div className="flex items-center gap-2">
