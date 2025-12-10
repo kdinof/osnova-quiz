@@ -184,7 +184,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
           <Button
             onClick={handleResultClick}
             size="lg"
-            className="bg-osnova-lime text-osnova-dark font-semibold px-8 py-6 text-lg rounded-full hover:bg-osnova-lime-hover transition-all duration-200 hover:scale-105"
+            className="w-full bg-osnova-lime text-osnova-dark font-semibold px-8 py-6 text-lg rounded-full hover:bg-osnova-lime-hover transition-all duration-200 hover:scale-105"
           >
             Посмотреть результат
           </Button>
