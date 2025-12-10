@@ -36,12 +36,6 @@ export function Quiz() {
 
   const handleSelectAnswer = (answer: Answer) => {
     setSelectedAnswer(answer.id);
-  };
-
-  const handleNext = () => {
-    if (!selectedAnswer) return;
-
-    const answer = currentQuestion.answers.find(a => a.id === selectedAnswer)!;
     
     setAnswers(prev => ({ ...prev, [currentQuestion.id]: answer }));
     
@@ -51,12 +45,14 @@ export function Quiz() {
       productivity: prev.productivity + answer.scores.productivity,
     }));
 
-    if (currentQuestionIndex < totalQuestions - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedAnswer(null);
-    } else {
-      setState("loading");
-    }
+    setTimeout(() => {
+      if (currentQuestionIndex < totalQuestions - 1) {
+        setCurrentQuestionIndex(prev => prev + 1);
+        setSelectedAnswer(null);
+      } else {
+        setState("loading");
+      }
+    }, 300);
   };
 
   const handlePostQuizAnswer = (answerId: string) => {
@@ -67,15 +63,14 @@ export function Quiz() {
 
   if (state === "question") {
     return (
-      <QuestionScreen
-        key={currentQuestion.id}
-        question={currentQuestion}
-        currentStep={currentQuestionIndex + 1}
-        totalSteps={totalQuestions}
-        selectedAnswer={selectedAnswer}
-        onSelect={handleSelectAnswer}
-        onNext={handleNext}
-      />
+        <QuestionScreen
+          key={currentQuestion.id}
+          question={currentQuestion}
+          currentStep={currentQuestionIndex + 1}
+          totalSteps={totalQuestions}
+          selectedAnswer={selectedAnswer}
+          onSelect={handleSelectAnswer}
+        />
     );
   }
 

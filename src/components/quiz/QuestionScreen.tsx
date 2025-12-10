@@ -8,7 +8,6 @@ interface QuestionScreenProps {
   totalSteps: number;
   selectedAnswer: string | null;
   onSelect: (answer: Answer) => void;
-  onNext: () => void;
 }
 
 export function QuestionScreen({
@@ -17,7 +16,6 @@ export function QuestionScreen({
   totalSteps,
   selectedAnswer,
   onSelect,
-  onNext,
 }: QuestionScreenProps) {
   return (
     <div className="min-h-screen flex flex-col bg-background max-w-[760px] mx-auto">
@@ -42,19 +40,6 @@ export function QuestionScreen({
           ))}
         </div>
 
-        <div className="mt-6 pt-4">
-          <button
-            onClick={onNext}
-            disabled={!selectedAnswer}
-            className={`btn-primary w-full text-lg transition-all duration-300 ${
-              selectedAnswer 
-                ? "opacity-100 translate-y-0" 
-                : "opacity-50 translate-y-2 cursor-not-allowed"
-            }`}
-          >
-            Продолжить
-          </button>
-        </div>
       </div>
     </div>
   );
