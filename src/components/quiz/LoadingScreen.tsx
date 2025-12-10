@@ -133,10 +133,19 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
         <div className="relative mb-8">
           {/* Animated glow */}
           <div 
-            className={`absolute -inset-1 bg-gradient-to-r from-osnova-lime/20 via-osnova-lime/40 to-osnova-lime/20 rounded-3xl blur-xl transition-opacity duration-500 ${
-              !isComplete ? "opacity-100 animate-pulse" : "opacity-0"
+            className={`absolute -inset-2 bg-gradient-to-r from-osnova-lime/10 via-osnova-lime/30 to-osnova-lime/10 rounded-3xl blur-2xl transition-opacity duration-700 ${
+              !isComplete ? "opacity-100" : "opacity-0"
             }`}
+            style={{
+              animation: !isComplete ? "glow 3s ease-in-out infinite" : "none"
+            }}
           />
+          <style>{`
+            @keyframes glow {
+              0%, 100% { opacity: 0.4; transform: scale(1); }
+              50% { opacity: 0.8; transform: scale(1.02); }
+            }
+          `}</style>
           <div className="relative bg-background rounded-2xl p-6 shadow-sm border border-border/50 text-left">
             <div className="space-y-4">
               {loadingSteps.map((step, index) => {
