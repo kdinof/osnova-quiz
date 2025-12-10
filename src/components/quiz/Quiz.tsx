@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { questions, trackResults, Answer } from "@/data/quizData";
 import { QuestionScreen } from "./QuestionScreen";
 import { LoadingScreen } from "./LoadingScreen";
@@ -9,12 +9,23 @@ type QuizState = "question" | "loading" | "result";
 
 export function Quiz() {
   const { session, updateSession, resetSession } = useQuizStorage();
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
 
   const { currentQuestionIndex, answers, scores, state } = session;
 
   const currentQuestion = questions[currentQuestionIndex];
+  
+  // Get previously selected answer for current question from storage
+  const storedAnswer = answers[currentQuestion?.id];
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(
+    storedAnswer?.id || null
+  );
   const totalQuestions = questions.length;
+
+  // Sync selectedAnswer when question changes (e.g., on back navigation or page refresh)
+  useEffect(() => {
+    const stored = answers[currentQuestion?.id];
+    setSelectedAnswer(stored?.id || null);
+  }, [currentQuestionIndex, answers, currentQuestion?.id]);
 
   const calculateResult = useCallback(() => {
     const finalScores = { ...scores };
@@ -33,12 +44,24 @@ export function Quiz() {
   const handleSelectAnswer = (answer: Answer) => {
     setSelectedAnswer(answer.id);
     
+    // Check if there was a previous answer for this question (re-answering)
+    const previousAnswer = answers[currentQuestion.id];
+    
+    let newScores = { ...scores };
+    
+    // If re-answering, subtract the old scores first
+    if (previousAnswer) {
+      newScores.visual -= previousAnswer.scores.visual;
+      newScores.builder -= previousAnswer.scores.builder;
+      newScores.productivity -= previousAnswer.scores.productivity;
+    }
+    
+    // Add new answer scores
+    newScores.visual += answer.scores.visual;
+    newScores.builder += answer.scores.builder;
+    newScores.productivity += answer.scores.productivity;
+    
     const newAnswers = { ...answers, [currentQuestion.id]: answer };
-    const newScores = {
-      visual: scores.visual + answer.scores.visual,
-      builder: scores.builder + answer.scores.builder,
-      productivity: scores.productivity + answer.scores.productivity,
-    };
 
     setTimeout(() => {
       if (currentQuestionIndex < totalQuestions - 1) {
@@ -60,26 +83,8 @@ export function Quiz() {
 
   const handleBack = () => {
     if (currentQuestionIndex > 0) {
-      const prevQuestion = questions[currentQuestionIndex - 1];
-      const prevAnswer = answers[prevQuestion.id];
-      
-      if (prevAnswer) {
-        const newAnswers = { ...answers };
-        delete newAnswers[prevQuestion.id];
-        
-        updateSession({
-          currentQuestionIndex: currentQuestionIndex - 1,
-          answers: newAnswers,
-          scores: {
-            visual: scores.visual - prevAnswer.scores.visual,
-            builder: scores.builder - prevAnswer.scores.builder,
-            productivity: scores.productivity - prevAnswer.scores.productivity,
-          },
-        });
-      } else {
-        updateSession({ currentQuestionIndex: currentQuestionIndex - 1 });
-      }
-      setSelectedAnswer(null);
+      // Just go back - keep answers and scores intact
+      updateSession({ currentQuestionIndex: currentQuestionIndex - 1 });
     }
   };
 
