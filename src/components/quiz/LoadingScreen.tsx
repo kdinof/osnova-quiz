@@ -95,7 +95,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
               cy="80"
               r={radius}
               fill="none"
-              stroke="hsl(var(--osnova-lime))"
+              stroke="hsl(var(--primary))"
               strokeWidth="8"
               strokeLinecap="round"
               strokeDasharray={circumference}
@@ -133,7 +133,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
         <div className="relative mb-8">
           {/* Animated glow */}
           <div 
-            className={`absolute -inset-2 bg-gradient-to-r from-osnova-lime/10 via-osnova-lime/30 to-osnova-lime/10 rounded-3xl blur-2xl transition-opacity duration-700 ${
+            className={`absolute -inset-2 bg-gradient-to-r from-primary/10 via-primary/30 to-primary/10 rounded-3xl blur-2xl transition-opacity duration-700 ${
               !isComplete ? "opacity-100" : "opacity-0"
             }`}
             style={{
@@ -162,11 +162,11 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
                   >
                     <div className="flex-shrink-0 w-6 h-6 flex items-center justify-center">
                       {isCompleted || isComplete ? (
-                        <div className="w-6 h-6 rounded-full bg-osnova-lime flex items-center justify-center animate-scale-in">
-                          <Check className="w-4 h-4 text-osnova-dark" />
+                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center animate-scale-in">
+                          <Check className="w-4 h-4 text-primary-foreground" />
                         </div>
                       ) : isActive ? (
-                        <Loader2 className="w-5 h-5 text-osnova-lime animate-spin" />
+                        <Loader2 className="w-5 h-5 text-primary animate-spin" />
                       ) : (
                         <div className="w-2 h-2 rounded-full bg-muted-foreground/30" />
                       )}
@@ -201,7 +201,7 @@ export function LoadingScreen({ scores }: LoadingScreenProps) {
           <Button
             onClick={handleResultClick}
             size="lg"
-            className="w-full bg-osnova-lime text-osnova-dark font-semibold px-8 py-6 text-lg rounded-full hover:bg-osnova-lime-hover transition-all duration-200 hover:scale-105"
+            className="w-full bg-primary text-primary-foreground font-semibold px-8 py-6 text-lg rounded-full hover:bg-primary/90 transition-all duration-200 hover:scale-105"
           >
             Посмотреть результат
           </Button>
